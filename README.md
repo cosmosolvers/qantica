@@ -1,2 +1,2 @@
 # qantica
-flask sous le model django
+flask pour api rest sous le model django
