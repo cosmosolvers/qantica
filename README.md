@@ -1,2 +1,2 @@
 # qantica
-flask pour api rest sous le model django
+Un framework web basé sur flask pour les api rest
