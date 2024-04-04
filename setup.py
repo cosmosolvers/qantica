@@ -7,6 +7,11 @@ setup(
     author='Hydromel Victor Doledji',
     author_email='victorvaddely@gmail.com',
     packages=find_packages(),
+    scripts=[
+        'scripts/qant',
+        'scripts/install.sh',
+    ],
+    url='https://github.com/cosmosolvers/qantica',
     install_requires=[
         # Liste des dépendances si nécessaire
     ],

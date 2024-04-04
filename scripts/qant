@@ -1,0 +1,101 @@
+import os
+import sys
+
+
+
+def init(foldername):
+    # verify if the folder exists
+    if os.path.exists(foldername):
+        print("""
+        ========================================
+              Folder already exists
+        ========================================
+              """
+        )
+        return
+    
+    foldername = foldername.lower()
+     
+    # create the folder
+    os.mkdir(foldername)
+    os.chdir(foldername)
+
+    # create the README.md file
+    with open("README.md", "w") as file:
+        file.write(f"# {foldername}\n\nThis is the README file for the {foldername} folder.")
+    
+    # create the .gitignore file
+    with open(".gitignore", "w") as file:
+        file.write("*.pyc\n__pycache__/\n*.pyo\n*.pyd\n.DS_Store\nThumbs.db\n")
+    
+    # create qmd.py file
+    with open("qmd.py", "w") as file:
+        file.write("import os\nimport sys\n\n\n\n")
+    
+    # create urls.py file
+    with open("urls.py", "w") as file:
+        file.write("from django.urls import path\n\n\n\n")
+    
+    # create config.py file
+    with open("config.py", "w") as file:
+        file.write("import os\n\n\n\n")
+    
+    # create folder with the same name
+    init_app(foldername)
+
+
+def init_app(foldername):
+    # verify if the folder exists
+    if os.path.exists(foldername):
+        print("""
+        ========================================
+              Folder already exists
+        ========================================
+              """
+        )
+        return
+    
+    foldername = foldername.lower()
+     
+    # create the folder
+    os.mkdir(foldername)
+    os.chdir(foldername)
+    
+    # create __init__.py file
+    with open("__init__.py", "w") as file:
+        file.write("")
+    
+    # create models.py file
+    with open("models.py", "w") as file:
+        file.write("from django.db import models\n\n\n\n")
+    
+    # create views.py file
+    with open("views.py", "w") as file:
+        file.write("from django.shortcuts import render\n\n\n\n")
+    
+    # create test.py file
+    with open("tests.py", "w") as file:
+        file.write("from django.test import TestCase\n\n\n\n")
+
+
+def main():
+    # usage: qant create <foldername>
+    if len(sys.argv) != 3:
+        if os.path.exists("qmd.py"):
+            print("Usage: qant create-app <foldername>")
+        else:
+            print("Usage: qant create <foldername>")
+        return
+    
+    action = sys.argv[1]
+    foldername = sys.argv[2]
+    
+    if action == "create":
+        init(foldername)
+    elif action == "create-app":
+        init_app(foldername)
+
+
+if __name__ == "__main__":
+    main()
+    
