@@ -1,6 +1,15 @@
 import os
 import sys
+import secrets
 
+
+PORT = {
+    'mysql': 3306,
+    'postgresql': 5432,
+    'mongodb': 27017,
+    'arangodb': 8529,
+    'sqlite': ''
+}
 
 
 def init(foldername):
@@ -10,8 +19,7 @@ def init(foldername):
         ========================================
               Folder already exists
         ========================================
-              """
-        )
+        """)
         return
     
     foldername = foldername.lower()
@@ -22,11 +30,24 @@ def init(foldername):
 
     # create the README.md file
     with open("README.md", "w") as file:
-        file.write(f"# {foldername}\n\nThis is the README file for the {foldername} folder.")
+        file.write(f"""
+# {foldername.capitalize()}
+
+A Qantica project
+
+## Created by Qantica
+
+```bash
+$ pip install qantica
+$ qant create {foldername}
+$ cd {foldername}
+$ python qmd.py run
+```
+""")
     
     # create the .gitignore file
     with open(".gitignore", "w") as file:
-        file.write("*.pyc\n__pycache__/\n*.pyo\n*.pyd\n.DS_Store\nThumbs.db\n")
+        file.write("*.pyc\n__pycache__/\n*.pyo\n*.pyd\n.DS_Store\nThumbs.db\n.env\ninstance/\ndist/\nbuild/\n*.egg-info/\n*.egg/\n")
     
     # create qmd.py file
     with open("qmd.py", "w") as file:
@@ -34,17 +55,69 @@ def init(foldername):
     
     # create urls.py file
     with open("urls.py", "w") as file:
-        file.write("from django.urls import path\n\n\n\n")
+        file.write("""
+from qantica.core import Router
+
+routes = [
+    ('/', {'GET': 'index'}),
+    ('/about', {'GET': 'about'}),
+    ('/contact', {'GET': 'contact'}),
+    ('/services', {'GET': 'services'}),
+    ('/blog', {'GET': 'blog'}),
+    ('/blog/<int:id>', {'GET': 'blog_detail'}),
+    ('/login', {'POST': 'login'}),
+    ('/register', {'POST': 'register'}),
+    ('/logout', {'GET': 'logout'}),
+    ('/profile', {'GET': 'profile'}),
+    ('/profile/edit', {'GET': 'profile_edit', 'PUT': 'profile_edit'}),
+    ('/profile/delete', {'DELETE': 'profile_delete'}),
+    ('/profile/change-password', {'PUT': 'change_password'}),
+]
+""")
     
     # create config.py file
     with open("config.py", "w") as file:
-        file.write("import os\n\n\n\n")
+        file.write(f"""
+# Flask configuration
+FLASK_SECRET_KEY = 'qantica_' +  {secrets.token_hex()}
+FLASK_RUN_PORT = 8001
+FLASK_RUN_HOST = ['0.0.0.0', 'localhost']
+FLASK_DEBUG = True
+FLASK_ENV = 'development'
+FLASK_APP = 'qmd.py'
+
+# database configuration
+DATABASES = {{
+    'default': {{
+        'ENGINE': 'qantica.db.database.sqlite', # qantica.db.database.mysql, qantica.db.database.postgresql, qantica.db.database.mongodb, qantica.db.database.arangodb
+        'NAME': '{foldername}',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': {PORT['sqlite']}
+    }}
+}}
+
+""")
+    
+    # create .qanticarc.qt file
+    with open(".qanticarc.qt", "w") as file:
+        file.write("This is a Qantica project.")
     
     # create folder with the same name
     init_app(foldername)
 
 
 def init_app(foldername):
+    # verify if folder is a Qantica project
+    if not os.path.exists('.qanticarc.qt'):
+        print("""
+        ================================================
+            Your folder does not a Qantica project
+        ================================================
+        """)
+        return
+    
     # verify if the folder exists
     if os.path.exists(foldername):
         print("""
@@ -67,11 +140,27 @@ def init_app(foldername):
     
     # create models.py file
     with open("models.py", "w") as file:
-        file.write("from django.db import models\n\n\n\n")
+        file.write("""
+from qantica.db import models
+
+
+class User(models.Model):
+
+    username = models.CharField(max_length=100)
+    email = models.EmailField()
+""")
     
     # create views.py file
     with open("views.py", "w") as file:
-        file.write("from django.shortcuts import render\n\n\n\n")
+        file.write("""
+from qantica import Response
+from qantica import request, redirect
+from qantica import status
+
+
+def index():
+    return Response(message='Welcome to Qantica', data={}, status=status.HTTP_200_OK)
+""")
     
     # create test.py file
     with open("tests.py", "w") as file:
@@ -81,10 +170,10 @@ def init_app(foldername):
 def main():
     # usage: qant create <foldername>
     if len(sys.argv) != 3:
-        if os.path.exists("qmd.py"):
-            print("Usage: qant create-app <foldername>")
-        else:
-            print("Usage: qant create <foldername>")
+        print("""
+            1. Usage: qant create <projectname>
+            2. Usage: qant create-app <appname>
+        """)
         return
     
     action = sys.argv[1]
@@ -98,4 +187,5 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
+
+# {'3306' if DATABASE_LABEL == 'mysql' else '5432' if DATABASE_LABEL == 'postgresql' else '27017' if DATABASE_LABEL == 'mongodb' else '8529' if DATABASE_LABEL == 'arangodb' else '',}
