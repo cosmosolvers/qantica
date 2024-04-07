@@ -53,7 +53,82 @@ class Field:
         db_validators=None, # definit une liste de validateurs
         db_error_messages=None # definit une liste de messages d'erreurs
     ):
-        pass
+        if primary_key:
+            pass
+        if unique:
+            pass
+        if null:
+            pass
+        if blank:
+            pass
+        if default:
+            pass
+        if auto_created:
+            pass
+        if auto_updated:
+            pass
+        if auto_incr:
+            pass
+        if choices:
+            pass
+        if max_length:
+            pass
+        if min_length:
+            pass
+        if max_value:
+            pass
+        if min_value:
+            pass
+        if validators:
+            pass
+        if error_messages:
+            pass
+        if max_digits:
+            pass
+        if decimal_places:
+            pass
+        if power_of_ten:
+            pass
+        if encoding:
+            pass
+        if editable:
+            pass
+        if on_delete:
+            pass
+        if on_update:
+            pass
+        if db_column:
+            pass
+        if db_index:
+            pass
+        if db_unique:
+            pass
+        if db_primary_key:
+            pass
+        if db_foreign_key:
+            pass
+        if db_check:
+            pass
+        if db_default:
+            pass
+        if db_auto_updated:
+            pass
+        if db_auto_created:
+            pass
+        if db_choices:
+            pass
+        if db_max_length:
+            pass
+        if db_min_length:
+            pass
+        if db_max_value:
+            pass
+        if db_min_value:
+            pass
+        if db_validators:
+            pass
+        if db_error_messages:
+            pass
     
     def __get__(self, instance, owner):
         return self.value
@@ -63,7 +138,6 @@ class Field:
     
     def __delete__(self, instance):
         del self.value
-
 
 class IntegerField(Field):
     def __init__(

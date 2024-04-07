@@ -44,6 +44,9 @@ class Query:
     
     def limit(self):
         pass
+
+    def skip(self):
+        pass
     
     def offset(self):
         pass
